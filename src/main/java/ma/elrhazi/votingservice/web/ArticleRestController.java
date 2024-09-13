@@ -1,19 +1,32 @@
 package ma.elrhazi.votingservice.web;
 
+import ma.elrhazi.votingservice.entities.Article;
 import ma.elrhazi.votingservice.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin("*")
 
 public class ArticleRestController {
-/*
-    @Autowired
-    private IArticleService articleService;
 
-    @GetMapping("/all")
-    public List<Article> articleList(){
-        return articleService.getAll();
+    @Autowired
+    private IArticleService<Article,String> articleService;
+
+    @GetMapping("/articles")
+    public List<Article> articles(){
+        return articleService.getArticles();
     }
+
+    @GetMapping("/articles/gameName/{name}")
+    public List<Article> articlesByGameName(@PathVariable(value = "name") String name){
+        return articleService.getArticlesByGameName(name);
+    }
+
 
     /*
     @GetMapping("/id/{id}")

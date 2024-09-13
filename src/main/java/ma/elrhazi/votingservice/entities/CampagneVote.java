@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -36,7 +34,8 @@ public class CampagneVote {
     private Country country;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Article> articles;
+    private List<Article> articles= new ArrayList<>();
+
 
 
 }

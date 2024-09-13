@@ -11,14 +11,11 @@ import ma.elrhazi.votingservice.dto.GameDTO;
 import ma.elrhazi.votingservice.entities.*;
 import ma.elrhazi.votingservice.mapper.cdeMapper.CampagneMapper;
 import ma.elrhazi.votingservice.mapper.cdeMapper.GameMapper;
-import ma.elrhazi.votingservice.repositories.ArticleRepository;
-import ma.elrhazi.votingservice.repositories.CampagneRepository;
-import ma.elrhazi.votingservice.repositories.CountryRepository;
-import ma.elrhazi.votingservice.repositories.GameRepository;
+import ma.elrhazi.votingservice.repositories.*;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -34,6 +31,7 @@ public class CampagneService implements ICampagneService {
     private ArticleRepository articleRepository;
     private GameRepository gameRepository;
     private CountryRepository countryRepository;
+    private VoteRepository  voteRepository;
 
     @Override
     public List<CampagneDTO> getAll() {
@@ -54,6 +52,7 @@ public class CampagneService implements ICampagneService {
                             .orElse(null));
     }
 
+
     @Override
     public List<CampagneDTO> getCampagneByGame(String gameName){
         Game game = gameRepository.findGameByName(gameName);
@@ -65,6 +64,8 @@ public class CampagneService implements ICampagneService {
                                                                     .map(cp -> campagneMapper.toDto(cp))
                                                                     .toList();
     }
+
+
 
     @Override
     public List<CampagneDTO> getCampagneByCountry(String countryName){
@@ -78,19 +79,25 @@ public class CampagneService implements ICampagneService {
     }
 
     @Override
-    public CampagneDTO create(Date dateDebut, Date dateFin, String name, String country) throws GameNotFoundExeption ,CountryNotFoundException{
+    public CampagneDTO create(Date dateDebut, Date dateFin, String gameName, String countryName,List<String> articlesId)
+              throws GameNotFoundExeption ,CountryNotFoundException{
 
-        Game game = gameRepository.findGameByName(name);
-        Country ct = countryRepository.findCountryByName(country);
+        Game game = gameRepository.findGameByName(gameName);
+        Country ct = countryRepository.findCountryByName(countryName);
 
         if( game == null ) {
             throw new GameNotFoundExeption("Game with  name=" +
-                    name + " doesn t exist in database");
+                    gameName + " doesn t exist in database");
         } if(ct == null) {
             throw  new CountryNotFoundException("CNFE");
         }
 
-        List<Article>  articles = articleRepository.findArticlesByGame(game);
+        List<Article>  articles = new ArrayList<>();
+        articlesId.forEach(articleId -> {
+            Article ar =articleRepository.findById(articleId).orElse(null);
+            articles.add(ar);
+        } );
+
         CampagneVote cp = CampagneVote.builder().dateDebut(dateDebut)
                                                 .dateFin(dateFin)
                                                 .game(game)
@@ -100,7 +107,7 @@ public class CampagneService implements ICampagneService {
 
          cp= campagneRepository.save(cp);
 
-        return campagneMapper.toDto(cp);
+         return campagneMapper.toDto(cp);
     }
 
 
@@ -216,6 +223,31 @@ public class CampagneService implements ICampagneService {
         ct.setName(name);
         ct.setCode(code);
         return countryRepository.save(ct);
+    }
+
+
+    @Override
+    public List<Article> getSortedArticleByVote(String idCampagne){
+        CampagneDTO cpDTO =  getById(idCampagne);
+        List<Vote> votes = voteRepository.findVotesByCampagneVote_Id(idCampagne);
+        Map<String, Integer> mostVotedArticles= new HashMap<>();
+        System.out.println(votes.toString());
+        for(Vote vote : votes) {
+            String idArticle = vote.getIdArticleDeVote();
+            if(mostVotedArticles.containsKey(idArticle)){
+                  mostVotedArticles.put(idArticle,mostVotedArticles.get(idArticle)+1);
+            }
+            else{
+                mostVotedArticles.put(idArticle,Integer.valueOf(0));
+            }
+        }
+
+        // Get the keys and sort them based on the corresponding value
+        List<String> sortedKeys = new ArrayList<>(mostVotedArticles.keySet());
+
+        sortedKeys.sort((key1, key2) -> mostVotedArticles.get(key2).compareTo(mostVotedArticles.get(key1)));
+
+        return  articleRepository.findAllById(sortedKeys);
     }
 
 

@@ -1,5 +1,4 @@
 package ma.elrhazi.votingservice.dto;
-
 import lombok.*;
 import ma.elrhazi.votingservice.entities.Article;
 
@@ -11,13 +10,9 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
 
-public class CampagneDTO implements Serializable {
-    private String id;
-    private Date dateDebut;
-    private Date dateFin;
-    private String gameName;
-    private String countryName;
-    private List<String> articlesSelectedId= new ArrayList<>();
+public class VoteDTO {
+    private String idMembre;
+    private String idArticle;
+    private  String idCampagne;
 }

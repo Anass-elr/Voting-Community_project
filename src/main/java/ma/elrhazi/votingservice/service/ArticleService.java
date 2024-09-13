@@ -1,8 +1,6 @@
 package ma.elrhazi.votingservice.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import ma.elrhazi.votingservice.Exeption.ArticleNotFoundException;
 import ma.elrhazi.votingservice.Exeption.GameNotFoundExeption;
 import ma.elrhazi.votingservice.entities.Article;
@@ -13,75 +11,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Getter
-@Setter
 @AllArgsConstructor
-
 @Service
-public class ArticleService{
+public class ArticleService implements IArticleService<Article,String>{
 
     private ArticleRepository articleRepository;
     private GameRepository gameRepository;
-
-/*
     @Override
-    public List<Article> getAll() {
+    public List<Article> getArticles() {
         return articleRepository.findAll();
     }
 
     @Override
-    public Article getById(String id) throws  ArticleNotFoundException{
+    public Article getArticleById(String id) {
         return articleRepository.findById(id).orElseThrow( () -> new ArticleNotFoundException(""));
     }
 
     @Override
-    public Article createArticle(Article article) {
-        return articleRepository.save(article);
-    }
-
-    @Override
-    public Article createValoArticle(Article article){
-         return articleRepository.save(article);
-    }
-
-
-
-    @Override
-    public Article createLoFLArticle(Article article) {
-        return articleRepository.save(article);
-
-    }
-
-    @Override
-    public Article updateArticle(String id, Article article) {
-        article.setId(id);
-      return articleRepository.save(article);
-    }
-
-    @Override
-    public Article deleteById(String id) throws ArticleNotFoundException{
-        Article ar =getById(id);
-        articleRepository.deleteById(id);
+    public Article deleteById(String id) {
+        Article ar = getArticleById(id);
+        articleRepository.delete(ar);
         return ar;
     }
 
-
-    public List<Article> getArticleByGameName(String gameName) {
-        Game game = gameRepository.findGameByName(gameName);
-        if( game ==null ) throw  new GameNotFoundExeption("GMNFEX");
-
-        return  articleRepository.findArticlesByGame(game);
+    @Override
+    public List<Article> getArticlesByGameName(String name) {
+        Game gm = gameRepository.findGameByName(name);
+        if(gm == null) throw new GameNotFoundExeption("");
+        return  articleRepository.findArticlesByGame_Name(name);
     }
 
 
-/*
-    public List<ValoArticle> getAllValoArticles() {
-        return  getArticleRepository().findAll().stream()
-                .filter(ar -> (ar instanceof ValoArticle))
-                .map(ar -> (ValoArticle) ar)
-                .toList();
 
-
-*/
 
 }

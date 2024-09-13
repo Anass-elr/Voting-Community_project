@@ -15,7 +15,7 @@ public class ValoArticleController  {
         super(articleRepository);
     }
 /*
-    public List<LeagArticle> getAllLeagArticles() {
+    public List<LeagArtice> getAllLeagArticles() {
 
         return getArticleRepository().findAll().stream()
                 .filter(ar -> (ar instanceof LeagArticle))

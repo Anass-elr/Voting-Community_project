@@ -2,6 +2,7 @@ package ma.elrhazi.votingservice.service;
 
 import lombok.AllArgsConstructor;
 import ma.elrhazi.votingservice.Exeption.ArticleNotFoundException;
+import ma.elrhazi.votingservice.Exeption.CampagneNotFoundException;
 import ma.elrhazi.votingservice.entities.Article;
 import ma.elrhazi.votingservice.entities.CampagneVote;
 import ma.elrhazi.votingservice.entities.Game;
@@ -10,7 +11,6 @@ import ma.elrhazi.votingservice.repositories.ArticleLeagRepository;
 import ma.elrhazi.votingservice.repositories.ArticleRepository;
 import ma.elrhazi.votingservice.repositories.CampagneRepository;
 import ma.elrhazi.votingservice.repositories.GameRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
@@ -47,6 +47,19 @@ public class LeagArticleService implements ILeagArticleService{
     }
 
     @Override
+    public List<LeagArticle> getArticlesByGameName(String id) {
+        return null;
+    }
+
+
+
+    @Override
+    public List<Article> getArticleByCampagneId(String id) {
+        CampagneVote campagneVote =campagneRepository.findById(id).orElseThrow(()-> new CampagneNotFoundException(""));
+        return campagneVote.getArticles();
+    }
+
+    @Override
     public LeagArticle save(LeagArticle leagArticle){
         Game  gm = gameRepository.findGameByName("LeagueOL");
         leagArticle.setGame(gm);
@@ -68,6 +81,7 @@ public class LeagArticleService implements ILeagArticleService{
         leagArticle.setId(Id);
         return articleLeagRepository.save(leagArticle);
     }
+
 
 
 }

@@ -3,10 +3,7 @@ package ma.elrhazi.votingservice.service;
 import ma.elrhazi.votingservice.Exeption.CountryNotFoundException;
 import ma.elrhazi.votingservice.dto.CampagneDTO;
 import ma.elrhazi.votingservice.dto.GameDTO;
-import ma.elrhazi.votingservice.entities.CampagneVote;
-import ma.elrhazi.votingservice.entities.Country;
-import ma.elrhazi.votingservice.entities.Game;
-import ma.elrhazi.votingservice.entities.Role;
+import ma.elrhazi.votingservice.entities.*;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +18,7 @@ public interface ICampagneService {
 
     List<CampagneDTO> getCampagneByCountry(String countryName);
 
-    CampagneDTO create(Date dateDebut, Date dateFin, String name, String country);
+    CampagneDTO create(Date dateDebut, Date dateFin, String gameName, String countryName,List<String> articlesId);
 
     CampagneDTO updateCampagne(String id, CampagneDTO campagneDTO);
 
@@ -49,4 +46,6 @@ public interface ICampagneService {
     Country saveCountry(String name, String code);
 
     Country updateCountry(String id, String name, String code) throws CountryNotFoundException;
+
+    List<Article> getSortedArticleByVote(String idCampagne);
 }

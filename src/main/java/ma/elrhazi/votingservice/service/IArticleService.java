@@ -9,4 +9,6 @@ public interface IArticleService<T,A>{
    List<T> getArticles();
    T getArticleById(A id);
    T deleteById(A id);
+
+   List<T> getArticlesByGameName(A id);
 }

@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -74,8 +75,7 @@ public class VotingServiceApplication implements CommandLineRunner {
             Date d21= new Date(2024,9,18),
                     d22 = new Date(2024,9,d21.getDay()+10);
 
-            service.create(d1,d2,game.getName(),"Maroc");
-            service.create(d21,d22,game.getName(),"Algeria");
+
         });
 
 

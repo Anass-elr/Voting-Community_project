@@ -3,6 +3,7 @@ package ma.elrhazi.votingservice.web;
 import ma.elrhazi.votingservice.Exeption.CampagneNotFoundException;
 import ma.elrhazi.votingservice.Exeption.GameNotFoundExeption;
 import ma.elrhazi.votingservice.dto.CampagneDTO;
+import ma.elrhazi.votingservice.entities.Article;
 import ma.elrhazi.votingservice.entities.CampagneVote;
 import ma.elrhazi.votingservice.service.ICampagneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class CampagneController {
 
     @Autowired
@@ -58,6 +60,7 @@ public class CampagneController {
 
 
 
+
     @GetMapping("/campagnes/{id}")
     public ResponseEntity<Object> getById(@PathVariable(value="id") String id){
         Object cp = service.getById(id);
@@ -72,10 +75,27 @@ public class CampagneController {
                 .body(cp);
     }
 
+    @GetMapping("/campagnes/ResultatVote/{id}")
+    public ResponseEntity<Object> getResultatVoteByCampagne(@PathVariable(value="id") String idCampagne){
+        List<Article> cp = service.getSortedArticleByVote(idCampagne);
+        if(cp == null){
+            ResponseEntity<Object> body = ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("");
+            return body;
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(cp);
+    }
+
     @PostMapping("/campagnes")
     public ResponseEntity<Object> createCampagne(@RequestBody CampagneDTO campagneDTO) throws GameNotFoundExeption {
-        CampagneDTO cp= service.create(campagneDTO.getDateDebut(),campagneDTO.getDateFin(),
-                campagneDTO.getGameName(),campagneDTO.getCountryName());
+        CampagneDTO cp= service.create(campagneDTO.getDateDebut()
+                                        ,campagneDTO.getDateFin(),
+                                         campagneDTO.getGameName()
+                                        ,campagneDTO.getCountryName()
+                                        ,campagneDTO.getArticlesSelectedId());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -1,5 +1,6 @@
 package ma.elrhazi.votingservice.repositories;
 
+import ma.elrhazi.votingservice.entities.Article;
 import ma.elrhazi.votingservice.entities.CampagneVote;
 import ma.elrhazi.votingservice.entities.Country;
 import ma.elrhazi.votingservice.entities.Game;
@@ -22,5 +23,5 @@ public interface CampagneRepository extends JpaRepository<CampagneVote,String> {
 
     List<CampagneVote> deleteCampagneVoteByCountry(Country country);
 
-
+    List<CampagneVote> findCampagneVoteByGame_Id(String id);
 }

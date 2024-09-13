@@ -13,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
+
 public class LeagArticleContorller {
     @Autowired
     private ILeagArticleService articleService;
@@ -67,5 +69,14 @@ public class LeagArticleContorller {
                 .status(HttpStatus.OK)
                 .body("Article Suprimé : "+ar);
     }
+
+    @GetMapping("/articles/{Campagneid}")
+    public ResponseEntity<Object> articleByCampagneId(@PathVariable(value = "Campagneid") String id){
+        List<Article> ar = articleService.getArticleByCampagneId(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ar);
+    }
+
 
 }

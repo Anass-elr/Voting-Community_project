@@ -2,6 +2,7 @@ package ma.elrhazi.votingservice.web;
 
 import lombok.AllArgsConstructor;
 import ma.elrhazi.votingservice.dto.CampagneDTO;
+import ma.elrhazi.votingservice.dto.VoteDTO;
 import ma.elrhazi.votingservice.entities.Article;
 import ma.elrhazi.votingservice.entities.Membre;
 
@@ -17,6 +18,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
+
 public class MembreRestController {
 
     @Autowired
@@ -44,10 +47,8 @@ public class MembreRestController {
     }
 
     @PostMapping("/membres/vote")
-    public Vote voteMembre(@RequestParam(name = "id")          String id,
-                           @RequestParam(name = "idCampagne")  String idCamp,
-                           @RequestParam(name = "idArticle")   String idArticle){
-        return membreService.vote(id,idCamp,idArticle);
+    public Vote voteMembre(@RequestBody VoteDTO voteDTO){
+        return membreService.vote(voteDTO.getIdMembre(),voteDTO.getIdCampagne(),voteDTO.getIdArticle());
     }
 
 

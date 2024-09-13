@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 
 
 @Entity
@@ -28,5 +29,6 @@ public abstract class Article implements Serializable {
     @ManyToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Game game;
+
 
 }

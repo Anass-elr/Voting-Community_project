@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface VoteRepository extends JpaRepository<Vote,String> {
-
     List<Vote> findVotesByMembre(Membre membre);
+
+    List<Vote> findVotesByCampagneVote_Id(String idCampagne);
 }
